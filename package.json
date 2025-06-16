@@ -4,6 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start:form-contorl-touched-mystery": "ng serve form-control-touched-mystery",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

@@ -3,33 +3,33 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "touched-mystery": {
+    "form-control-touched-mystery": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
         }
       },
-      "root": "projects/touched-mystery",
-      "sourceRoot": "projects/touched-mystery/src",
+      "root": "projects/form-control-touched-mystery",
+      "sourceRoot": "projects/form-control-touched-mystery/src",
       "prefix": "app",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/touched-mystery",
-            "index": "projects/touched-mystery/src/index.html",
-            "browser": "projects/touched-mystery/src/main.ts",
+            "outputPath": "dist/form-control-touched-mystery",
+            "index": "projects/form-control-touched-mystery/src/index.html",
+            "browser": "projects/form-control-touched-mystery/src/main.ts",
             "polyfills": ["zone.js"],
-            "tsConfig": "projects/touched-mystery/tsconfig.app.json",
+            "tsConfig": "projects/form-control-touched-mystery/tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "projects/touched-mystery/public"
+                "input": "projects/form-control-touched-mystery/public"
               }
             ],
-            "styles": ["/touched-mystery/src/styles.scss"],
+            "styles": ["projects/form-control-touched-mystery/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "touched-mystery:build:production"
+              "buildTarget": "form-control-touched-mystery:build:production"
             },
             "development": {
-              "buildTarget": "touched-mystery:build:development"
+              "buildTarget": "form-control-touched-mystery:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,15 +75,15 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "polyfills": ["zone.js", "zone.js/testing"],
-            "tsConfig": "/touched-mystery/tsconfig.spec.json",
+            "tsConfig": "projects/form-control-touched-mystery/tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               {
                 "glob": "**/*",
-                "input": "/touched-mystery/public"
+                "input": "projects/form-control-touched-mystery/public"
               }
             ],
-            "styles": ["/touched-mystery/src/styles.scss"],
+            "styles": ["projects/form-control-touched-mystery/src/styles.scss"],
             "scripts": []
           }
         }
