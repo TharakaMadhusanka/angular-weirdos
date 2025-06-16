@@ -1,6 +1,9 @@
 {
   "name": "angular-weirdos",
   "version": "0.0.0",
+  "author": {
+    "name": "Tharaka Madhusanka"
+  },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
