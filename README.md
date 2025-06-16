@@ -1,59 +1,15 @@
-# AngularWeirdos
+# Angular Weirdos
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.0.4.
+Welcome to “Angular Weirdos” — a series where I’ll dive deep into the quirky behaviors I’ve stumbled upon throughout my Angular development journey. You might have hit similar snags yourself, perhaps patching them up without a full ground-level analysis. Here, we’ll nerd out on the anti-patterns I’ve observed, talk through the challenges they threw my way, and break down the technical fixes I cooked up.
 
-## Development server
+We often find countless ways to tackle daily development problems, sometimes even resorting to elaborate solutions for something as simple as a missing semicolon. Believe me, I’ve been there more times than I can count. Often, these “fixes” are unnecessary implementations that can lead to exhaustive resource use, performance bottlenecks, and overly complex code.
 
-To start a local development server, run:
+This ‘Angular Weirdos’ series will highlight common Angular challenges, my go-to solutions, and the crucial pitfalls to watch out for.
 
-```bash
-ng serve
-```
+This consists example projects I created for Angular Weirdos.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+These projects are developed using Ng V19.
 
-## Code scaffolding
+# Article Series
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. [Angular Weirdos: The Touched Validation Mystery](https://tharaka-madhusanka.medium.com/angular-weirdos-the-touched-validation-mystery-20032eba4c2a)
