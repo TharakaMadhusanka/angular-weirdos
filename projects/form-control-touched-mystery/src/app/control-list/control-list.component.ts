@@ -1,8 +1,14 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  NgZone,
+  OnInit,
+} from '@angular/core';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import {
   AbstractControl,
+  AsyncValidatorFn,
   FormArray,
   FormBuilder,
   FormControl,
@@ -10,11 +16,24 @@ import {
   FormsModule,
   NonNullableFormBuilder,
   ReactiveFormsModule,
+  ValidationErrors,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { first } from 'rxjs';
+import {
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  first,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+  take,
+  tap,
+} from 'rxjs';
 
 export interface WeirdozFormGroupModel {
   fieldsArray: FormArray<FormGroup<{ name: FormControl<string> }>>;
@@ -41,7 +60,7 @@ export class ControlListComponent implements OnInit {
     >;
   }
 
-  constructor(private fb: NonNullableFormBuilder) {}
+  constructor(private fb: NonNullableFormBuilder, private ngZone: NgZone) {}
 
   ngOnInit() {
     this.weirdozFg = this.fb.group<WeirdozFormGroupModel>(
@@ -58,7 +77,7 @@ export class ControlListComponent implements OnInit {
   addControl() {
     const group = this.fb.group<{ name: FormControl<string> }>({
       name: this.fb.control<string>('', {
-        validators: [this.duplicateNameValidatorAntiPatternApproachOne()],
+        asyncValidators: [this.duplicateNameAsyncValidatorOnStable()],
         // When to run the validation
         // 'change' - on every change
         // 'blur' - when the control loses focus
@@ -69,10 +88,11 @@ export class ControlListComponent implements OnInit {
     this.weirdozFg.controls.fieldsArray.push(group, { emitEvent: false });
 
     // Approach 1 - Mark as touched explicitly
-    group.controls.name.valueChanges.subscribe((_) => {
-      group.controls.name.markAsTouched();
-      group.controls.name.updateValueAndValidity();
-    });
+    // Commented out to simulate for Approach 2/3
+    // group.controls.name.valueChanges.subscribe((_) => {
+    //   group.controls.name.markAsTouched();
+    //   group.controls.name.updateValueAndValidity({ emitEvent: false });
+    // });
   }
 
   duplicateNameValidator(): ValidatorFn {
@@ -129,6 +149,74 @@ export class ControlListComponent implements OnInit {
         return group.get('name')?.value === name;
       });
       return isDuplicate.length > 1 ? { duplicateName: true } : null;
+    };
+  }
+
+  // Approach 2 - Async Validator with Delay
+  duplicateNameAsyncValidatorWithDelay(): AsyncValidatorFn {
+    // We return the AsyncValidatorFn, which takes the control as an argument
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      console.log(`Async Validator Triggered. Current value: ${control.value}`);
+
+      return of(control.value).pipe(
+        delay(300),
+        map((name: string) => {
+          console.log(
+            '--- Async Validator running validation logic after delay ---'
+          );
+          console.log(`Run count ${++this.runcount}`);
+          // isDirty
+          console.log(`isControlDirty ${control.dirty}`);
+          // isTouched
+          console.log(`isControlTouched ${control.touched}`);
+
+          if (!control.value || !control.touched) {
+            console.log('Value is empty or null, returning null (no error)');
+            return null;
+          }
+
+          const isDuplicate = this.fieldsArray.controls.filter((group: any) => {
+            return group.get('name')?.value === name;
+          });
+
+          return isDuplicate.length > 1 ? { duplicateName: true } : null;
+        })
+      );
+    };
+  }
+
+  // Approach 3 - Using NgZone OnStable with AsyncValdiator
+  duplicateNameAsyncValidatorOnStable(): AsyncValidatorFn {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      console.log(
+        `Inside OnStable, Async Validator Triggered. Current value: ${control.value}`
+      );
+      return new Observable((obs) => {
+        this.ngZone.onStable.pipe(first()).subscribe(() => {
+          console.log(`Run count: ${++this.runcount}`);
+          console.log(`isControlDirty: ${control.dirty}`);
+          console.log(`isControlTouched: ${control.touched}`);
+
+          if (!control.value || !control.touched) {
+            obs.next(null);
+            obs.complete();
+            return;
+          }
+          const name = control.value;
+          const isDuplicate = this.fieldsArray.controls.filter((group: any) => {
+            return group.get('name')?.value === name;
+          });
+
+          console.log(
+            'Reached the end of the validator function',
+            isDuplicate.length
+          );
+
+          let error = isDuplicate.length > 1 ? { duplicateName: true } : null;
+          obs.next(error);
+          obs.complete();
+        });
+      });
     };
   }
 }
