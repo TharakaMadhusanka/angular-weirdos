@@ -1,13 +1,14 @@
 {
   "name": "angular-weirdos",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "author": {
     "name": "Tharaka Madhusanka"
   },
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "start:form-contorl-touched-mystery": "ng serve form-control-touched-mystery",
+    "start:form-control-touched-mystery": "ng serve form-control-touched-mystery",
+    "start:form-control-inline-warning-message": "ng serve formcontrol-inline-warning-message",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
