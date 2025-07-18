@@ -1,0 +1,47 @@
+<p-panel header="Reactive Form Field Inline Warning Message">
+  <div class="flex flex-row gap-2" [formGroup]="userRegisterFg">
+    <div class="flex flex-col gap-1 justify-start">
+      <label for="fullNameInput"
+        >Full Name<span class="text-red-400">*</span></label
+      >
+      <input
+        id="fullNameInput"
+        pInputText
+        [formControl]="fullName"
+        placeholder="Enter your full name"
+      />
+      <p-message
+        severity="error"
+        size="small"
+        variant="simple"
+        *ngIf="fullName.touched && !!fullName.errors"
+      >
+        Full Name is required.
+      </p-message>
+      <p-message
+        severity="warn"
+        size="small"
+        variant="simple"
+        *ngIf="fullName.touched && !!fullName.warnings"
+      >
+        {{fullName?.warnings?.['maxLengthExceeded']}}
+      </p-message>
+      <button pButton primary>Submit</button>
+    </div>
+    <p-divider layout="vertical" />
+    <p-fieldset legend="Form Status Meta Information">
+      <div class="flex flex-col gap-1">
+        <div>
+          Is Form Valid:
+          <span class="text-red-400">{{ userRegisterFg.valid }}</span>
+        </div>
+        <div>
+          Form Errors: <span class="text-green-400">{{ errors }}</span>
+        </div>
+        <div>
+          Form Warnings: <span class="text-orange-400">{{ warnings }}</span>
+        </div>
+      </div>
+    </p-fieldset>
+  </div>
+</p-panel>
