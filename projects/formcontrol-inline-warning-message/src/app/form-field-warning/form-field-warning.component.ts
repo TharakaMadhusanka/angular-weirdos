@@ -14,6 +14,7 @@ import { MessageModule } from 'primeng/message';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { FieldsetModule } from 'primeng/fieldset';
+import { delay, filter, firstValueFrom, Observable, of } from 'rxjs';
 
 /**
  * An extended version of Angular's `FormControl` that adds support for warning messages.
@@ -80,12 +81,58 @@ export const registerWarnings = <T>(
   control: ExtendedFormControl<T>,
   warningFunc: () => { [key: string]: string } | null
 ) => {
+  let warnings: { [key: string]: string } | null;
   Object.defineProperty(control, getWarningsPropertyName(), {
-    get: () => warningFunc(),
+    get: () => {
+      warnings = warningFunc();
+      return warnings;
+    },
+    set(next) {
+      warnings = { ...warnings, ...next };
+    },
   });
 
   control.valueChanges.subscribe(() => {
     control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+  });
+};
+
+/**
+ * Registers an asynchronous warnings property on the provided form control.
+ *
+ * This function attaches a computed property (whose name is determined by `getWarningsPropertyName()`)
+ * to the given `control` object. The property's getter returns the latest asynchronously computed warnings.
+ * The warnings are updated whenever the control's value changes, and also initialized on registration.
+ *
+ * @template T - The type of the form control's value.
+ * @param control - The form control to which the async warnings property will be attached.
+ * @param warningFunc - An async function that returns an object containing warning messages, keyed by string, or `null` if no warnings exist.
+ */
+export const registerAsyncWarnings = <T>(
+  control: ExtendedFormControl<T>,
+  warningFunc: () => Promise<{ [key: string]: string } | null>
+) => {
+  let warnings: { [key: string]: string } | null = null;
+
+  if (!Object.hasOwn(control, getWarningsPropertyName())) {
+    Object.defineProperty(control, getWarningsPropertyName(), {
+      get: () => warnings,
+      set(next) {
+        warnings = { ...control.warnings, ...next };
+      },
+    });
+  } else {
+    warnings = control.warnings ?? null;
+  }
+
+  // Subscribe to value changes on the control
+  control.valueChanges.pipe(delay(300)).subscribe(() => {
+    warningFunc().then((result) => {
+      console.log(result, warnings, control.warnings);
+      control.warnings = result;
+      console.log(control, control.warnings);
+      control.updateValueAndValidity({ onlySelf: true, emitEvent: false });
+    });
   });
 };
 
@@ -138,10 +185,17 @@ export class FormFieldWarningComponent implements OnInit {
       }),
     });
 
-    registerWarnings<string>(this.fullName, () => {
+    registerWarnings(this.fullName, () => {
       return this.fullName.value.length > 10
-        ? { maxLengthExceeded: 'No of maximum characters is 10.' }
+        ? { maxLengthExceeded: 'No of maximum characters is 10' }
         : null;
     });
+
+    registerAsyncWarnings(this.fullName, () => this.asyncFunc());
   }
+
+  asyncFunc = async (): Promise<{ [key: string]: string } | null> => {
+    const response = await firstValueFrom(of(true));
+    return response ? { asyncWarning: 'This is an example warning.' } : null;
+  };
 }
