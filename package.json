@@ -8,7 +8,9 @@
     "ng": "ng",
     "start": "ng serve",
     "start:form-control-touched-mystery": "ng serve form-control-touched-mystery",
-    "start:form-control-inline-warning-message": "ng serve formcontrol-inline-warning-message",
+    "start:form-control-inline-warning-message": "ng serve form-control-inline-warning-message",
+    "start:ng-signals": "ng serve ng-signals",
+    "start:ng-snacks": "ng serve ng-snacks",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

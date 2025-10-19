@@ -1,0 +1,10 @@
+Signal Root: {{ signalOne() }} <br />
+Tracked Dependant Signal:
+{{ dependantSignalWithTrack() }}
+<br />
+UnTracked Dependant Signal:
+{{ dependantSignalWithUnTrack() }}
+<br />
+<button (click)="updateSignal()">Update Signals</button>
+<button (click)="setSignal()">Set Signals</button>
+<router-outlet></router-outlet>
