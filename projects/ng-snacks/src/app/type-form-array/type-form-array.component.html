@@ -3,14 +3,12 @@
 <table style="border: 1px solid; width: 100%">
   <thead>
     <th>Account Name</th>
-    <th (click)="onDataChange()">Account Number</th>
+    <th>Account Number</th>
     <th></th>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let record of formRecord().controls | keyvalue"
-      [formGroup]="record.value"
-    >
+    @for(record of formArray().controls; track $index; let i = $index) {
+    <tr [formGroup]="record">
       <td>
         <input formControlName="accountName" />
       </td>
@@ -18,8 +16,9 @@
         <input formControlName="accountNumber" />
       </td>
       <td>
-        <button type="button" (click)="delete.emit(record.key)">X</button>
+        <button type="button" (click)="delete.emit(i)">X</button>
       </td>
     </tr>
+    }
   </tbody>
 </table>
